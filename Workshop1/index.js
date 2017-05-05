@@ -1,5 +1,5 @@
 var fs = require ('fs');
-var chalk = require("chalk");
+var chalk = require('chalk');
 
 
 var obj;
@@ -23,5 +23,17 @@ fs.readFile(__dirname + '/staedte.json', function(err, data) {
     	console.log("----------------------");
     
     }
+obj.cities.sort(function(a, b){
+	
+	return a.population - b.population;
 
+});
+
+fs.writeFile(__dirname + '/sortierte_staedte.json', JSON.stringify(obj.cities, null, 2) , function(err) {
+
+	if(err) {
+	
+	console.log(err);
+}
+});
 });
