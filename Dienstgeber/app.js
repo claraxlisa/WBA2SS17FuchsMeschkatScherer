@@ -13,6 +13,11 @@ app.get('/user/:id', function(req, res) {
 	res.send("User mit der id " + id);
 });
 
+app.put('/user/:id', function(req, res) {
+    var id = req.params.id;
+    res.send("User mit ID " + id + "aktuallisiert");
+});
+
 app.post('/user/new', function(req, res) {
 	console.log("User hinzugefügt");
 });
