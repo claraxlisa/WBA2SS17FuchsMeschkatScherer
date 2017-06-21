@@ -22,6 +22,12 @@ app.put('/user/:id', function(req, res) {
     res.send("User mit ID " + id + "aktuallisiert");
 });
 
+app.delete('/user/:id', function(req, res){
+
+	var id = req.params.id;
+	res.status(200);
+	res.send("Benutzer wird gelöscht")
+});
 
 app.get('/user/:id/book', function(req, res) {
 
@@ -35,6 +41,13 @@ app.post('/user/:id/book', function(req, res) {
 	var id = req.params.id;
 	res.status(200);
 	console.log("Neues Buch anlegen");
+});
+
+app.delete('/user/:id/book', function(req, res){
+
+	var id = req.params.id;
+	res.status(200);
+	res.send("Buch vom Benutzer wird gelöscht")
 });
 
 app.get('/book', function(req, res) {
@@ -56,6 +69,12 @@ app.get('/user/Wishlist', function(req, res) {
 
 	res.status(200);
 	res.send("Wishlist Aufrufen");
+});
+
+app.get('/category', function(req, res){
+
+		res.status(200);
+		res.send("Kategorie Abrufen");
 });
 
 app.listen(3000);
