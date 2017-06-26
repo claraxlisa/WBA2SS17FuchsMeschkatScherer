@@ -5,34 +5,58 @@ const settings ={
 	port:3000
 };
 
+//Errorhandler
+app.use(function(err, req, res, next){
+	console.error(err.stack);
+	res.end(err.status + ' ' + err.messages);
+})
 
-app.get('/user', function(req, res) {
-	res.status(200);
-	res.send("Listet alle Benutzer auf");
+//Log mit Pfad und Zeitangabe
+app.use(function(req, res, next){
+	console.log('Time: %d' + 'Request-Pfad: ' + req.path, Date.now());
+	next();
 });
 
-app.post('/user/new', function(req, res) {
-	console.log("User hinzugefügt");
+//Routing
+
+const user = require('./user');
+app.use('/user', user);
+
+//Pfad '/'
+
+app.get("/", function(req, res){
+	res.send("Get auf /");
 });
 
-app.get('/user/:id', function(req, res) {
-	var id = req.params.id;
-	res.status(200);
-	res.send("User mit der id " + id);
+app.post("/", function(req, res){
+	res.send("post");
 });
 
-app.put('/user/:id', function(req, res) {
-    var id = req.params.id;
-    res.send("User mit ID " + id + "aktuallisiert");
+//get auf Pfad '/user'
+app.get("/user", function(req, res){
+	res.send("Get /user");
 });
 
-app.delete('/user/:id', function(req, res){
-
-	var id = req.params.id;
-	res.status(200);
-	res.send("Benutzer wird gelöscht")
+app.put("/user", function(req, res){
+	res.send("Put /user");
 });
 
+app.post("/user", function(req, res){
+	res.send("post /user");
+});
+
+app.delete("/user", function(req, res){
+	res.send("delete /user");
+});
+
+//GEt Request mit Parametern
+app.get('/user/:userID', function(req, res){
+	"UserID " + req.params.userId;
+});
+
+
+
+/*
 app.get('/user/:id/book', function(req, res) {
 
 	var id = req.params.id;
@@ -81,6 +105,7 @@ app.get('/category', function(req, res){
 		res.send("Kategorie Abrufen");
 });
 
+*/
 
 app.listen(settings.port, function(){
 	console.log("Server läuft auf Port " + settings.port);
