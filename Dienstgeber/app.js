@@ -1,6 +1,10 @@
 var express = require('express');
-
 var app = express();
+
+const settings ={
+	port:3000
+};
+
 
 app.get('/user', function(req, res) {
 	res.status(200);
@@ -77,4 +81,7 @@ app.get('/category', function(req, res){
 		res.send("Kategorie Abrufen");
 });
 
-app.listen(3000);
+
+app.listen(settings.port, function(){
+	console.log("Server läuft auf Port " + settings.port);
+});
