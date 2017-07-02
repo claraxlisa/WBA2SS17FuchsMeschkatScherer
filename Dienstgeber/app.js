@@ -20,7 +20,7 @@ app.use(function(req, res, next){
 //Routing
 
 const user = require('./user');
-app.use('/user', user);
+app.use('/user/', user);
 
 //Pfad '/'
 

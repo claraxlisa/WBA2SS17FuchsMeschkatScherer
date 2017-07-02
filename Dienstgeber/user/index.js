@@ -6,15 +6,15 @@ const ressourceName ="user";
 
 
 //router präsentiert eine instanz der Middleware
-router.use(finction(req, res next){
+router.use(function(req, res, next){
   console.log("USer Route Time Log ", Date.now());
   next();
-})
+});
 
 //Get auf "/user"
 router.get("/", function (req,res){
   res.send("Alle Benutzer...");
-})
+});
 
 //Post aud "/user"
 router.post("/", bodyParser.json(), function(req, res){
@@ -26,4 +26,4 @@ router.get("/:userId", function(req,res){
   res.send("User mit der ID: " + req.params.id);
 });
 
-module.express = router;
+module.exports = router;
