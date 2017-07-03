@@ -1,9 +1,32 @@
 var express = require('express');
 var app = express();
+var bodyParser = require('body-parser');
+var fs = require('fs');
 
 const settings ={
-	port:3000
+	port:3000,
+	datafile : "./testdata.json"
 };
+
+//In-Memory
+global.data = require('./data');
+
+fs.readFile(__dirname + '/testdata.json', function(err, data) {
+
+    if(err) {
+            console.log(err);
+        } 
+
+     obj = JSON.parse(data);
+
+      for(var i = 0; i<obj.user.length;i++) {
+    
+       console.log("Name: " + obj.user[i].name);
+    	    
+    }
+
+
+    });
 
 //Errorhandler
 app.use(function(err, req, res, next){
