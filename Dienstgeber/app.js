@@ -1,5 +1,6 @@
 var express = require('express');
 var app = express();
+var async = require('async');
 var bodyParser = require('body-parser');
 var fs = require('fs');
 
@@ -9,24 +10,47 @@ const settings ={
 };
 
 //In-Memory
-global.data = require('./data');
+global.data = require("./data");
 
-fs.readFile(__dirname + '/testdata.json', function(err, data) {
+//von Speicher in Arbeitsspeicher einlesen
+async.waterfall([
 
-    if(err) {
-            console.log(err);
-        } 
+	//readfile aufruf - settings.datafile ist der Dateiname--utf8n das Encoding--
+	//wenn read erfolgreich war erhalten wir einen callback -- function(err, filestring) dieser enthät einen Fehler oder die Inhalte der Datei
+	//
+	function(callback){
+		fs.readFile(settings.datafile, 'utf8', function(err, filestring) {callback(null, err, filestring); });
 
-     obj = JSON.parse(data);
+	},
 
-      for(var i = 0; i<obj.user.length;i++) {
-    
-       console.log("Name: " + obj.user[i].name);
-    	    
-    }
+	//in Json parsen 
+	function(err, filestring, callback){
+
+		//erst überprüfen wir ob ein Fehler enthalten ist
+		if(err != null){
+			callback(null, false);
+		}else{
+			//falls kein Fehler gefunden wurde in Json parsen
+			data.user = JSON.parse(filestring).user;
+			data.book = JSON.parse(filestring).book;
+			callback(null, true);
+		}
+	}
+], function(err, success){
+		//falls ein fehler ist success auf false setzen 
+		if(err != null){
+			callback(null,false);
+		}
+
+		//Consolenausgabe
+		console.log('Daten wurden '+(success ? 'erfolgreich' : 'nicht erfolgreich')+' in den Speicher gelesen');
 
 
-    });
+		}
+	);
+
+
+
 
 //Errorhandler
 app.use(function(err, req, res, next){
@@ -45,8 +69,11 @@ app.use(function(req, res, next){
 const user = require('./user');
 app.use('/user/', user);
 
-//Pfad '/'
+const book = require('./book');
+app.use('/book/', book);
 
+//Pfad '/'
+/*
 app.get("/", function(req, res){
 	res.send("Get auf /");
 });
@@ -77,7 +104,7 @@ app.get('/user/:userID', function(req, res){
 	"UserID " + req.params.userId;
 });
 
-
+*/
 
 /*
 app.get('/user/:id/book', function(req, res) {
