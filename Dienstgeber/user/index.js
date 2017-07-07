@@ -1,9 +1,14 @@
 const express = require("express");
 const router = express.Router();
 const bodyParser = require("body-parser");
+var fs = require('fs');
 
-const ressourceName ="user";
+const ressourceName ="users";
 
+const settings ={
+  port:3000,
+  datafile : "./testdata.json"
+};
 
 //router präsentiert eine instanz der Middleware
 router.use(function(req, res, next){
@@ -11,33 +16,39 @@ router.use(function(req, res, next){
   next();
 });
 
-//Get auf "/user"
+//Get auf "/users"
 router.get("/", function (req,res){
-  res.status(200).send(data.user);
+  res.status(200).send(data.users);
 });
 
-//Post auf "/user"
-router.post("/", bodyParser.json(), function(req, res){
-  
-  	//validate payloard
-	if(data.validateUser(req.body)){
-		
-		//neue Benutzer Id erstellen
-		req.body.id = data.newUserId();
 
-		//Zu In-Memory hionzufügen
-		data.user.push(req.body);
+//post auf "/user"
 
-		//status 200 zurückgeben und neue uri 
-		res.status(200).json( {url: req.protcol+"://" + req.headers.host + "/" + req.params.id});
+router.post('/', bodyParser.json(), function(req, res){
+  fs.readFile(settings.datafile, function(err, data){
+    var user = JSON.parse(data);
+    var counter = 0;
+ 
+    // Die id des letzten users einlesen
+    for(var i = 0; i < user.users.length; i++){
+      if(user.users[i].id > counter){
+        counter = user.users[i].id;
+      }
+    }
 
-	}else{
-		res.status(400).json(data.errors.badPayload);
-	}
-
-
+        user.users.push({
+        "id": ++counter,
+        "name": req.body.name,
+        "city": req.body.city,
+        
+      });
+      fs.writeFile(settings.datafile, JSON.stringify(user, null, 2));
+      res.status(200).send("Ein neuer Benutzer wurde angelegt\n");
+   
+  });
 });
 
+//get id
 router.get("/:id", function(req,res){
   //id
   var id = parseInt(req.params.id);
