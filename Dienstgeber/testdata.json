@@ -1,33 +1,28 @@
-{ "user": [
-	{
-		"id" : 0,
-		"name" : "MAx Mustermann",
-		"city" : "Gummersbach"	
-		
-		},
-		{
-		"id" : 1,
-		"name" : "Fritzchen",
-		"city" : "Koeln"	
-		
-		}
-
-
-	],
-
-
-
-
- "book" :[
-		{
-			"isbn" : 9783732542215,
-			"name" : "Origin",
-			"autor" : "Dan Brown",
-			"verlag" : "Bastei Luebbe",
-			"seiten" : 680
-
-		}
-
-	]
-
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Fritzchen",
+      "city": "Koeln"
+    },
+    {
+      "id": 4,
+      "name": "Test",
+      "city": "Köln"
+    },
+    {
+      "id": 5,
+      "name": "Bill",
+      "city": "Boston"
+    }
+  ],
+  "book": [
+    {
+      "isbn": 9783732542215,
+      "name": "Origin",
+      "autor": "Dan Brown",
+      "verlag": "Bastei Luebbe",
+      "seiten": 680
+    }
+  ]
 }

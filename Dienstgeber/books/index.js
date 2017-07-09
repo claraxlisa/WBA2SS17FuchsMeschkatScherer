@@ -60,3 +60,26 @@ router.get("/:isbn", function(req,res){
   res.status(200).json(book);
 
 });
+
+router.put('/:isbn', bodyParser.json(), function(req, res){
+  fs.readFile(settings.datafile, function(err, data){
+    var book = JSON.parse(data);
+
+    //find the searched user and edit his attribute
+    for(var i = 0; i < book.books.length; i++ ){
+      if(book.books[i].isbn == req.params.isbn){
+        book.books[i].name = req.body.name;
+        book.books[i].author = req.body.author;
+        book.books[i].verlag = req.body.verlag;
+        book.books[i].seiten = req.body.seiten;
+
+        fs.writeFile(settings.datafile, JSON.stringify(user, null, 2));
+        res.status(200).send("Das Buch mit der ISBN "+ isbn +"wurde erfolgreich bearbeitet");
+        
+      }
+    }
+  });
+});
+
+module.exports = router;
+

@@ -4,6 +4,9 @@ var async = require('async');
 var bodyParser = require('body-parser');
 var fs = require('fs');
 
+
+app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
+
 const settings ={
 	port:3000,
 	datafile : "./testdata.json"
@@ -72,9 +75,6 @@ app.use('/users/', users);
 const books = require('./books');
 app.use('/books/', books);
  
-
-
-
 app.listen(settings.port, function(){
 	console.log("Server läuft auf Port " + settings.port);
 });

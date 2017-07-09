@@ -57,13 +57,31 @@ router.get("/:id", function(req,res){
   	res.status(400).json(data.errors.badPayload);
   }
 
-  var user = data.user.filter(function(u){
+  var user = data.users.filter(function(u){
   	return (u.id == id);
 
   });
 
   res.status(200).json(user);
 
+});
+
+// DELETE Specific User
+router.delete('/:id', bodyParser.json(), function(req, res) {
+	fs.readFile(settings.datafile, function(err, data) {
+	var user = JSON.parse(data);
+	var userid = req.params.id;
+		for(var i = 0; i < user.users.length; i++) {
+		
+		    if(user.users[i].id == userid) {
+		    	user.users.splice(user.users[i].id, 1);
+		    	//user.users.splice(user.users.indexOf(user.users.id));
+		    	//delete user.users[user.users.id];
+			fs.writeFile(settings.datafile, JSON.stringify(user, null, 2));
+			res.status(200).send("Benutzer gelöscht");
+		    }
+		}
+	});
 });
 
 module.exports = router;
