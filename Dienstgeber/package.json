@@ -1,15 +1,18 @@
 {
   "name": "dienstgeber",
   "version": "1.0.0",
-  "description": "",
+  "description": "WBA2SS17FuchsMeschkatScherer",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
   },
-  "author": "",
+  "author": "FuchsMeschkatScherer",
   "license": "ISC",
   "dependencies": {
+    "async": "^2.5.0",
     "body-parser": "^1.17.2",
-    "express": "^4.15.3"
+    "express": "^4.15.3",
+    "fs": "0.0.1-security"
   }
 }

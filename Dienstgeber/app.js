@@ -8,7 +8,7 @@ var fs = require('fs');
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
 const settings ={
-	port:3000,
+	port:process.env.PORT || 3000,
 	datafile : "./testdata.json"
 };
 
