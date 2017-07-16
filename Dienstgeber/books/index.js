@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const bodyParser = require("body-parser");
 const fs = require("fs");
+const _ = require ("lodash");
 
 const ressourceName ="books";
 
@@ -25,6 +26,8 @@ router.get("/", function (req,res){
 //post auf "/user"
 
 router.post('/', bodyParser.json(), function(req, res){
+  data.books.push(req.body);
+
   fs.readFile(settings.datafile, function(err, data){
     var book = JSON.parse(data);
   
@@ -35,27 +38,35 @@ router.post('/', bodyParser.json(), function(req, res){
         "name": req.body.name,
         "author": req.body.author,
         "verlag" : req.body.verlag,
-        "seiten" : req.body.seiten
+        "seiten" : req.body.seiten,
+	"thumbnail" : req.body.thumbnail,
+	"artikelbeschreibung": req.body.artikelbeschreibung,
+	"recommendedCounter": req.body.recommendedCounter
         
       });
       fs.writeFile(settings.datafile, JSON.stringify(book, null, 2));
-      res.status(200).send("Ein neues buch wurde hinzugefügt. \n");
+      res.status(200).send("Ein neues Buch wurde hinzugefügt. \n");
    
   });
 });
 
 router.get("/:isbn", function(req,res){
   //isbn
-  var isbn = parseInt(req.params.isbn);
+  var isbn = req.params.isbn;
 
   if(isNaN(isbn)){
   	res.status(400).json(data.errors.badPayload);
   }
 
-  var book = data.books.filter(function(u){
-  	return (u.isbn == isbn);
-
-  });
+   var book = _.find(data.books, ['isbn', isbn]);
+  
+  if(book == undefined) {
+      return res.status(400).json({error: "Buch nicht gefunden"});
+  }
+//  var book = data.books.filter(function(u){
+//  	return (u.isbn == isbn);
+//
+//  });
 
   res.status(200).json(book);
 
@@ -73,12 +84,26 @@ router.put('/:isbn', bodyParser.json(), function(req, res){
         book.books[i].verlag = req.body.verlag;
         book.books[i].seiten = req.body.seiten;
 
-        fs.writeFile(settings.datafile, JSON.stringify(user, null, 2));
+        fs.writeFile(settings.datafile, JSON.stringify(book, null, 2));
         res.status(200).send("Das Buch mit der ISBN "+ isbn +"wurde erfolgreich bearbeitet");
         
       }
     }
   });
+});
+
+router.delete('/:isbn', bodyParser.json(), function(req, res) {
+     var isbn = req.params.isbn;
+
+     if(isNaN(isbn)) {return res.status(400).json({ error : 'Fehler beim Parsen'}) };
+     
+     var index = _.findIndex(data.books, ['isbn', isbn]);
+
+     if (index == -1) {return res.status(404).json({error: "Buch nicht gefunden"}) };
+
+     data.books.splice(index, 1);
+     res.status(200).send("Buch entfernt");
+
 });
 
 module.exports = router;

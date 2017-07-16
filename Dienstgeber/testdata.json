@@ -14,15 +14,22 @@
       "id": 5,
       "name": "Bill",
       "city": "Boston"
+    },
+    {
+      "id": 6,
+      "name": "Bill",
+      "city": "Boston"
     }
   ],
-  "book": [
+  "books": [
     {
-      "isbn": 9783732542215,
-      "name": "Origin",
-      "autor": "Dan Brown",
-      "verlag": "Bastei Luebbe",
-      "seiten": 680
+      "isbn": "9780133591620",
+      "name": "Modern Operating Systems",
+      "verlag": "Pearson",
+      "seiten": 1136,
+      "thumbnail": "http://books.google.com/books/content?id=9gqnngEACAAJ&printsec=frontcover&img=1&zoom=5&source=gbs_api",
+      "artikelbeschreibung": "",
+      "recommendedCounter": 0
     }
   ]
 }
