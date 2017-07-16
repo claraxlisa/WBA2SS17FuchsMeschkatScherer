@@ -1,0 +1,17 @@
+{
+  "name": "dienstnutzer",
+  "version": "1.0.0",
+  "description": "dienstnuter WBA2SS17FuchsMeschkatScherer",
+  "main": "dienstnutzer.js",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "express": "^4.15.3",
+    "faye": "^1.2.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

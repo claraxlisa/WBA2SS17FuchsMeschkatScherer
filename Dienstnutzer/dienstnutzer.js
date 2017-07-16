@@ -3,6 +3,9 @@ var http = require('http');
 var request = require('request');
 var app = express();
 var bodyParser = require('body-parser');
+var faye = require('faye');
+
+var server = http.createServer();
 
 var dHost ='http://localhost';
 var dPort = 3000;
@@ -56,6 +59,13 @@ app.post('/users', function(req, res) {
 		json: userData 
 	    }
 
+	    client.publish('/news', {text: "Ein User wurde hinzugefügt"} ).then(function() {
+		console.log('Message received by server');
+		
+	    }, function(error) {
+	      	console.log("There was an error publishing: " + error.message);
+	    });
+
 	    request(options, function(err, response, body) {
 		res.json(body);
 	    });
@@ -64,7 +74,6 @@ app.post('/users', function(req, res) {
 
 
 //------------------------BOOKS-------------------------
-
 
 // GET all Books
 app.get('/books', function(req, res) {	
@@ -112,22 +121,27 @@ request(queryUrl, function(err, response, body) {
 		"recommendedCounter": 0
 	    };
    
-    var url = dUrl + '/books';
-    var options = {
-        uri: url,
-	method: 'POST',
-	headers: {
-	    'Content-type': 'application/json'
-	},
-	json: bookData 
-    }
+	    var url = dUrl + '/books';
+	    var options = {
+	        uri: url,
+		method: 'POST',
+		headers: {
+		    'Content-type': 'application/json'
+		},
+		json: bookData 
+	    }
 
-    request(options, function(err, response, body) {
-	res.json(body);
-    });
-    
-    });
+	    client.publish('/news', {text: "Ein Buch wurde hinzugefügt"} ).then(function() {
+			console.log('Message received by server');
+			
+		    }, function(error) {
+		      	console.log("There was an error publishing: " + error.message);
+	    });
 
+	    request(options, function(err, response, body) {
+		res.json(body);
+	    });
+    });
 });
 
 app.put("/books/:isbn", function(req,res) {
@@ -159,12 +173,17 @@ app.put("/books/:isbn", function(req,res) {
 		json: bookData 
 	    }
 
+	    client.publish('/news', {text:"Das Buch mit der ISBN "+ isbn + " wurde geändert"} ).then(function() {
+		console.log('Message received by server');
+		}, function(error) {
+		      	console.log("There was an error publishing: " + error.message);
+	    });
+
 	    request(options, function(err, response, body) {
 		res.json(body);
 	    });
     });
 });
-
 
 // GET a book with a specific ISBN
 app.get('/books/:isbn', function(req, res) {
@@ -179,7 +198,6 @@ app.get('/books/:isbn', function(req, res) {
 });
 
 
-
 // DELETE a book with a specific ISBN
 app.delete('/books/:isbn', function(req, res) {
     var isbn = req.params.isbn;
@@ -187,10 +205,30 @@ app.delete('/books/:isbn', function(req, res) {
     var url = dUrl + '/books/' + isbn;
     request.delete(url, function(err, response, body) {
 	res.json("Buch entfernt");
+
+	client.publish('/news', {text:"Das Buch mit der ISBN " + isbn + " wurde entfernt"} ).then(function() {
+		console.log('Message received by server');
+	    }, function(error) {
+	      	console.log("There was an error publishing: " + error.message);
+	});
     });
 });
 
+//-----------------------------------------------------------------------
+//-----FAYE-----------
 
+var fayeserver = new faye.NodeAdapter({mount: '/faye', timeout: 45});
+fayeserver.attach(server);
+
+//serverseitiger Client
+var client = new faye.Client('http://localhost:3001' + '/faye');
+client.subscribe('/news', function(message) {
+    console.log(message.text);
+});
+
+server.listen(3001, function() {
+    console.log("Listening on 3001");
+});
 
 
 app.listen(8080, function() {
