@@ -62,6 +62,38 @@ app.post('/users', function(req, res) {
 	});
 });
 
+//------------------------BOOKS-------------------------
+
+// GET all Books
+app.get('/books', function(req, res) {	
+  
+var url = dUrl  + '/books';
+   
+    request(url, function(err, response, body) {
+	body = JSON.parse(body);
+	
+	//res.json(body);
+	
+	//Renders View with all books & Search input
+	res.render('addbook.ejs', {
+		book : body
+	});
+    });
+});
+
+
+// GET a book with a specific ISBN
+app.get('/books/:isbn', function(req, res) {
+     var isbn = req.params.isbn;
+    var url = dUrl + '/books/' + isbn;
+
+    request.get(url, function(err, response, body) {
+	body = JSON.parse(body);
+	res.json(body);
+    });
+
+});
+
 
 app.listen(8080, function() {
     console.log("Dienstnutzer ist auf 8080 verfügbar");
