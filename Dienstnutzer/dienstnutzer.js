@@ -4,15 +4,56 @@ var request = require('request');
 var app = express();
 var bodyParser = require('body-parser');
 var faye = require('faye');
+var ejs = require('ejs');
 
 var server = http.createServer();
 
-var dHost ='http://localhost';
-var dPort = 3000;
-var dUrl = dHost + ':' + dPort;
+//var dHost ='http://localhost';
+//var dPort = 3000;
+//var dUrl = dHost + ':' + dPort;
 
+var dUrl = 'https://uni-buch.herokuapp.com';
+
+app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+app.get ('/', function(req, res) {
+var url = dUrl  + '/books';
+   var query = req.query.query;
+	console.log(query);
+
+    request(url, function(err, response, body) {
+	body = JSON.parse(body);
+	//res.json(body);
+	res.render('searchbook.ejs', {
+		book : body,
+		query : query
+	});
+    });
+});
+
+
+app.post ('/', function(req, res) {
+var url = dUrl  + '/books';
+   var query = req.query.query;
+   console.log(query);
+    request(url, function(err, response, body) {
+	body = JSON.parse(body);
+	
+	var book = body.books.filter(function(u){
+  	    return (u.query == name);
+	});
+
+
+	//res.json(body);
+	res.render('searchbook.ejs', {
+		book : body,
+		
+	});
+    });
+});
+
 
 //GET users
 app.get('/users', function(req, res) {
@@ -21,7 +62,13 @@ app.get('/users', function(req, res) {
     request(url, function(err, response, body) {
 	body = JSON.parse(body);
 	res.json(body);
+	
     });
+});
+
+
+app.get('/users/register', function(req,res) {
+    res.render('adduser');
 });
 
 
@@ -83,11 +130,24 @@ var url = dUrl  + '/books';
     request(url, function(err, response, body) {
 	body = JSON.parse(body);
 	
-	res.json(body);
+	//res.json(body);
+
+	//Renders View with all books & Search input
+	res.render('addbook.ejs', {
+		book : body
+	});
     });
 });
 
-
+/* 
+Creates a new Book entry
+1. Takes the query from the textfield
+2. Replace all spaces wit '+'
+3. Make a request to the google books api
+4. Save Book data
+5. POST book based on 'options'
+6. FAYE publish a message
+*/
 app.post('/books', function(req, res) {
 
     var description = req.body.description;
@@ -139,7 +199,8 @@ request(queryUrl, function(err, response, body) {
 	    });
 
 	    request(options, function(err, response, body) {
-		res.json(body);
+		//res.json(body);
+		res.redirect('/books');
 	    });
     });
 });
@@ -180,7 +241,8 @@ app.put("/books/:isbn", function(req,res) {
 	    });
 
 	    request(options, function(err, response, body) {
-		res.json(body);
+		//res.json(body);
+		res.redirect('/books');
 	    });
     });
 });
@@ -193,6 +255,10 @@ app.get('/books/:isbn', function(req, res) {
     request.get(url, function(err, response, body) {
 	body = JSON.parse(body);
 	res.json(body);
+//	res.render('details', {
+//		book : body
+//	});
+	
     });
 
 });
