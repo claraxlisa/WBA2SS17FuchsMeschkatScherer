@@ -1,0 +1,27 @@
+<% include layouts/main.ejs %>
+
+<h1>Edit profile</h1>
+
+<form method="PUT" action="/user/username/profile">
+    <div class="form-group">
+    	<label>First Name</label>
+	<input type="text" name="first_name" class="form-control" placeholder="<%= user.first_name %>">
+    </div>
+    <div class="form-group">
+    	<label>Last Name</label>
+	<input type="text" name="last_name" class="form-control" placeholder="<%= user.last_name %>">
+    </div>
+
+    <div class="form-group">
+    	<label>Email</label>
+	<input type="text" name="email" class="form-control" placeholder="<%= user.email %>">
+    </div>
+
+    <div class="form-group">
+    	<label>Phone</label>
+	<input type="text" name="phone" class="form-control" placeholder="<%= user.phone %>">
+    </div>
+
+<input type="submit" class="btn btn-primary" value="Update">
+</form>
+

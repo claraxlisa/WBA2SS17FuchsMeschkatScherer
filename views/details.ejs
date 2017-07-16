@@ -1,0 +1,11 @@
+<% include layouts/main.ejs %>
+
+<ul>
+<li><%= book.name %></li>
+<img src="<%=book.thumbnail %>">
+<p><%= book.artikelbeschreibung %> </p>
+<hr>
+<% book.forEach(function(book) { %>
+<li <%= book.artikelbeschreibung %> </li>
+<% }); %>
+</ul>

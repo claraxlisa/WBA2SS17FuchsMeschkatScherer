@@ -1,0 +1,23 @@
+<% include layouts/main.ejs %>
+
+<h1>Buch Suchen </h1>
+<form method="GET" action="/">
+<input type="text" name="query"  placeholder="Buch">
+<input type="submit" class="btn btn-primary"  value="Suchen">
+</form>
+
+<% for(var i = 0; i < book.length; i++) { %>
+	<% if(book[i].name.indexOf(query) !== -1) { %>
+		<p>
+		<img src="<%= book[i].thumbnail %>" width="64" height="96">
+		<a href="/books/<%= book[i].isbn %>"><%= book[i].name %></a> 		
+		</p>
+	<% } %> 
+<% } %>
+<h2>Kürzlich hinzugefügt</h2>
+<ul class = "list-inline">
+<% for(var i = 0 ; i < book.length; i++) { %>
+<li><a href="/books/<%=book[i].isbn %>"> <img src="<%= book[i].thumbnail  %>"></a></li>
+<% } %>
+</ul>
+<h2>Empfehlung der Community? </h2>
