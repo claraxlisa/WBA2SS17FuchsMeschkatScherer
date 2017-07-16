@@ -7,7 +7,7 @@ var fs = require('fs');
 const ressourceName ="users";
 
 const settings ={
-  port:3000,
+  port:process.env.PORT || 3000,
   datafile : "./testdata.json"
 };
 
